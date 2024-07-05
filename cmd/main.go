@@ -13,6 +13,7 @@ func main() {
     db.InitDB()
 
 	http.HandleFunc("/", handlers.HealthCheckHandler)
+	http.HandleFunc("/users", handlers.UserHandler)
 	// http.HandleFunc("/hello/{name}", helloHandler)
 
     log.Printf("Listening on %s", port)
