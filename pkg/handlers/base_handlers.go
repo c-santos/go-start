@@ -1,8 +1,7 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -23,7 +22,7 @@ func baseHandler(w http.ResponseWriter, r *http.Request, response Response) {
 	w.Write(jsonResponse)
 }
 
-func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	response := Response{
 		Message: "Hello, you've called me!",
 		Status:  200,
@@ -42,13 +41,3 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	// baseHandler(w, r, response)
 }
 
-func main() {
-
-    port := ":8000"
-
-	http.HandleFunc("/", healthCheckHandler)
-	// http.HandleFunc("/hello/{name}", helloHandler)
-
-    log.Printf("Listening on %s", port)
-	log.Fatal(http.ListenAndServe(port, nil))
-}
