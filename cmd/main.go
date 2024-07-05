@@ -14,7 +14,7 @@ func main() {
 
 	http.HandleFunc("/", handlers.HealthCheckHandler)
 	http.HandleFunc("/users", handlers.UserHandler)
-	// http.HandleFunc("/hello/{name}", helloHandler)
+    http.HandleFunc("/users/create", handlers.CreateUserHandler)
 
     log.Printf("Listening on %s", port)
 	log.Fatal(http.ListenAndServe(port, nil))
