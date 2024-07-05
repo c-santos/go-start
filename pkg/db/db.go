@@ -2,8 +2,10 @@ package db
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	"go-start/pkg/models"
 	"log"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
@@ -33,4 +35,20 @@ func createTables() {
 	} else {
 		log.Println("Database created successfully.")
 	}
+}
+
+func CreateUser(user models.User) error {
+    stmt, err := DB.Prepare("INSERT INTO user(name) VALUES(?)")
+    if err != nil {
+        return err
+    }
+
+    defer stmt.Close()
+
+    _, err = stmt.Exec(user.Name)
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
