@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"go-start/pkg/models"
 	"log"
 
@@ -51,4 +52,32 @@ func CreateUser(user models.User) error {
     }
 
     return nil
+}
+
+func GetUsers() ([]models.User, error) {
+    rows, err := DB.Query("SELECT * from user")
+    if err != nil {
+        return nil, errors.New("Could not prepare statement.")
+    }
+
+    defer rows.Close()
+
+    var users []models.User
+
+    for rows.Next() {
+        var user models.User
+        err = rows.Scan(&user.ID, &user.Name)
+        if err != nil {
+            log.Fatal(err)
+        }
+        users = append(users, user)
+    }
+
+    err = rows.Err()
+    if err != nil {
+        log.Fatal(err)
+        return nil, errors.New("An error occured.")
+    }
+
+    return users, nil
 }
