@@ -3,14 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+    "go-start/pkg/models"
 )
 
-type Response struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-}
-
-func baseHandler(w http.ResponseWriter, r *http.Request, response Response) {
+func Respond(w http.ResponseWriter, response models.Response) {
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -23,21 +19,10 @@ func baseHandler(w http.ResponseWriter, r *http.Request, response Response) {
 }
 
 func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	response := Response{
+	response := models.Response{
 		Message: "Hello, you've called me!",
 		Status:  200,
 	}
 
-	baseHandler(w, r, response)
+	Respond(w, response)
 }
-
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-
-	// response := Response{
-	// 	Message: "Hello, %s\n", r.PathValue("name"),
-	// 	Status: 200,
-	// }
-
-	// baseHandler(w, r, response)
-}
-
