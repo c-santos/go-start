@@ -39,45 +39,70 @@ func createTables() {
 }
 
 func CreateUser(user models.User) error {
-    stmt, err := DB.Prepare("INSERT INTO user(name) VALUES(?)")
-    if err != nil {
-        return err
-    }
+	stmt, err := DB.Prepare("INSERT INTO user(name) VALUES(?)")
+	if err != nil {
+		return err
+	}
 
-    defer stmt.Close()
+	defer stmt.Close()
 
-    _, err = stmt.Exec(user.Name)
-    if err != nil {
-        return err
-    }
+	_, err = stmt.Exec(user.Name)
+	if err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
 
 func GetUsers() ([]models.User, error) {
-    rows, err := DB.Query("SELECT * from user")
-    if err != nil {
-        return nil, errors.New("Could not prepare statement.")
-    }
+	rows, err := DB.Query("SELECT * from user")
+	if err != nil {
+		return nil, errors.New("Could not prepare statement.")
+	}
 
-    defer rows.Close()
+	defer rows.Close()
 
-    var users []models.User
+	var users []models.User
 
-    for rows.Next() {
-        var user models.User
-        err = rows.Scan(&user.ID, &user.Name)
-        if err != nil {
-            log.Fatal(err)
-        }
-        users = append(users, user)
-    }
+	for rows.Next() {
+		var user models.User
+		err = rows.Scan(&user.ID, &user.Name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		users = append(users, user)
+	}
 
-    err = rows.Err()
-    if err != nil {
-        log.Fatal(err)
-        return nil, errors.New("An error occured.")
-    }
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+		return nil, errors.New("An error occured.")
+	}
 
-    return users, nil
+	return users, nil
+}
+
+func GetUser(user_id int) ([]models.User, error) {
+	row := DB.QueryRow("SELECT * from user where id = ?", user_id)
+
+	if row.Err() != nil {
+		return nil, errors.New("Query unsuccessful.")
+	}
+
+	var id int
+	var name string
+
+	err := row.Scan(&id, &name)
+	if err != nil {
+		return nil, errors.New("Row scan failed.")
+	}
+
+	user := []models.User{
+		{
+			ID:   id,
+			Name: name,
+		},
+	}
+
+	return user, nil
 }
