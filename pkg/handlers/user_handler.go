@@ -17,8 +17,13 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
         {ID: 2, Name: "Bob"},
     }
 
+    response := models.Response{
+        Message: users,
+        Status: 200,
+    }
+
     w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(users)
+    Respond(w, response)
 }
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,6 +47,11 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    response := models.Response{
+        Message: user,
+        Status: 201,
+    }
+
     w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(user)
+    Respond(w, response)
 }
