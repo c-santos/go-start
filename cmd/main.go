@@ -12,10 +12,13 @@ func main() {
 
 	db.InitDB()
 
-	http.HandleFunc("/", handlers.HealthCheckHandler)
-	http.HandleFunc("/users", handlers.GetUsersHandler)
-	http.HandleFunc("/users/create", handlers.CreateUserHandler)
+    mux := &http.ServeMux{}
+
+	mux.HandleFunc("/", handlers.HealthCheckHandler)
+	mux.HandleFunc("/users", handlers.GetUsersHandler)
+	mux.HandleFunc("/users/{id}", handlers.GetUserHandler)
+	mux.HandleFunc("/users/create", handlers.CreateUserHandler)
 
 	log.Printf("Listening on %s", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(port, mux))
 }
