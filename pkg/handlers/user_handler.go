@@ -11,7 +11,7 @@ type CreateUserDto struct {
 	Name string `json:"name"`
 }
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
+func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
