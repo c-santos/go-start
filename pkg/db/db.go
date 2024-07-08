@@ -82,11 +82,11 @@ func GetUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func GetUser(user_id int) ([]models.User, error) {
+func GetUser(user_id int) (models.User, error) {
 	row := DB.QueryRow("SELECT * from user where id = ?", user_id)
 
 	if row.Err() != nil {
-		return nil, errors.New("Query unsuccessful.")
+		return models.User{}, errors.New("Query unsuccessful.")
 	}
 
 	var id int
@@ -94,14 +94,12 @@ func GetUser(user_id int) ([]models.User, error) {
 
 	err := row.Scan(&id, &name)
 	if err != nil {
-		return nil, errors.New("Row scan failed.")
+		return models.User{}, errors.New("Row scan failed.")
 	}
 
-	user := []models.User{
-		{
+	user := models.User{
 			ID:   id,
 			Name: name,
-		},
 	}
 
 	return user, nil
