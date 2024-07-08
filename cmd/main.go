@@ -18,6 +18,7 @@ func main() {
 	mux.HandleFunc("/users", handlers.GetUsersHandler)
 	mux.HandleFunc("/users/{id}", handlers.GetUserHandler)
 	mux.HandleFunc("/users/create", handlers.CreateUserHandler)
+	mux.HandleFunc("/users/delete/{id}", handlers.DeleteUserHandler)
 
 	log.Printf("Listening on %s", port)
 	log.Fatal(http.ListenAndServe(port, mux))

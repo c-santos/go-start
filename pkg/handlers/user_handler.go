@@ -24,7 +24,7 @@ func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Respond(w, users)
+	Respond(w, users, 200)
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +45,7 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
         return
 	}
 
-	Respond(w, user)
+	Respond(w, user, 200)
 }
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -69,5 +69,27 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Respond(w, user)
+	Respond(w, user, 201)
 }
+
+func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodDelete { 
+        http.Error(w, "Method not allowed", http.StatusBadRequest) 
+        return
+    }
+
+    user_id := r.PathValue("id")
+
+    err := db.DeleteUser(user_id)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    message := Response{
+        Message: "Deleted user.",
+    }
+
+    Respond(w, message, 200)
+}
+

@@ -104,3 +104,19 @@ func GetUser(user_id int) (models.User, error) {
 
 	return user, nil
 }
+
+func DeleteUser(user_id string) error {
+	stmt, err := DB.Prepare("DELETE FROM user WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+    _, err = stmt.Exec(user_id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
