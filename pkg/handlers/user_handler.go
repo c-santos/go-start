@@ -36,13 +36,13 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	user_id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		http.Error(w, "Could not convert id to int", http.StatusInternalServerError)
-        return
+		return
 	}
 
 	user, err := db.GetUser(user_id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
+		return
 	}
 
 	Respond(w, user, 200)
@@ -73,23 +73,42 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodDelete { 
-        http.Error(w, "Method not allowed", http.StatusBadRequest) 
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Method not allowed", http.StatusBadRequest)
+		return
+	}
+
+	user_id := r.PathValue("id")
+
+	err := db.DeleteUser(user_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	message := Response{
+		Message: "Deleted user.",
+	}
+
+	Respond(w, message, 200)
+}
+
+func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPatch {
+        http.Error(w, "Method not allowed", http.StatusBadRequest)
         return
     }
 
     user_id := r.PathValue("id")
 
-    err := db.DeleteUser(user_id)
+    var updatedUser models.User
+    json.NewDecoder(r.Body).Decode(&updatedUser)
+
+    user, err := db.UpdateUser(user_id, updatedUser)
     if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
+        http.Error(w, err.Error(), 500)
     }
 
-    message := Response{
-        Message: "Deleted user.",
-    }
-
-    Respond(w, message, 200)
+    Respond(w, user, 200)
 }
 

@@ -98,8 +98,8 @@ func GetUser(user_id int) (models.User, error) {
 	}
 
 	user := models.User{
-			ID:   id,
-			Name: name,
+		ID:   id,
+		Name: name,
 	}
 
 	return user, nil
@@ -113,10 +113,35 @@ func DeleteUser(user_id string) error {
 
 	defer stmt.Close()
 
-    _, err = stmt.Exec(user_id)
+	_, err = stmt.Exec(user_id)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func UpdateUser(user_id string, user models.User) (models.User, error) {
+	stmt, err := DB.Prepare("UPDATE user SET name = ? WHERE id = ?")
+	if err != nil {
+		return models.User{}, err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.Name, user_id)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	rows := DB.QueryRow("SELECT * from user WHERE id = ?", user_id)
+
+	var updatedUser models.User
+	err = rows.Scan(&updatedUser.ID, &updatedUser.Name)
+
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return updatedUser, nil
 }
