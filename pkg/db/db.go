@@ -54,7 +54,7 @@ func CreateUser(user models.User) error {
 	return nil
 }
 
-func GetUsers() ([]models.User, error) {
+func GetUsers() (models.Users, error) {
 	rows, err := DB.Query("SELECT * from user")
 	if err != nil {
 		return nil, errors.New("Could not prepare statement.")
@@ -62,7 +62,7 @@ func GetUsers() ([]models.User, error) {
 
 	defer rows.Close()
 
-	var users []models.User
+	var users models.Users
 
 	for rows.Next() {
 		var user models.User
