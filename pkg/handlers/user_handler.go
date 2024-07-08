@@ -5,7 +5,6 @@ import (
 	"go-start/pkg/db"
 	"go-start/pkg/models"
 	"net/http"
-	"strconv"
 )
 
 type CreateUserDto struct {
@@ -33,11 +32,7 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user_id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil {
-		http.Error(w, "Could not convert id to int", http.StatusInternalServerError)
-		return
-	}
+	user_id := r.PathValue("id")
 
 	user, err := db.GetUser(user_id)
 	if err != nil {
@@ -63,7 +58,7 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.CreateUser(user)
+	user, err = db.CreateUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -80,17 +75,15 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	user_id := r.PathValue("id")
 
-	err := db.DeleteUser(user_id)
+    user, err := db.GetUser(user_id)
+
+	err = db.DeleteUser(user_id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	message := Response{
-		Message: "Deleted user.",
-	}
-
-	Respond(w, message, 200)
+	Respond(w, user, 200)
 }
 
 func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
