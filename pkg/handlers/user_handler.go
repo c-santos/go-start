@@ -24,13 +24,7 @@ func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := models.Response{
-		Message: users,
-		Status:  200,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	Respond(w, response)
+	Respond(w, users)
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -51,13 +45,7 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
         return
 	}
 
-	response := models.Response{
-		Message: user,
-		Status:  200,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	Respond(w, response)
+	Respond(w, user)
 }
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -81,11 +69,5 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := models.Response{
-		Message: user,
-		Status:  201,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	Respond(w, response)
+	Respond(w, user)
 }

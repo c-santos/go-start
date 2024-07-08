@@ -2,15 +2,17 @@ package handlers
 
 import (
 	"net/http"
-    "go-start/pkg/models"
 )
 
 
 func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	response := models.Response{
-		Message: "Hello, you've called me!",
-		Status:  200,
-	}
+    type Response struct {
+        Message string `json:"message"`
+    }
+
+    response := Response{
+        Message: "Hello!",
+    }
 
 	Respond(w, response)
 }
