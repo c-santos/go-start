@@ -14,12 +14,12 @@ func main() {
 
     mux := &http.ServeMux{}
 
-	mux.HandleFunc("/", handlers.HealthCheckHandler)
-	mux.HandleFunc("/users", handlers.GetUsersHandler)
-	mux.HandleFunc("/users/{id}", handlers.GetUserHandler)
-	mux.HandleFunc("/users/create", handlers.CreateUserHandler)
-	mux.HandleFunc("/users/delete/{id}", handlers.DeleteUserHandler)
-	mux.HandleFunc("/users/update/{id}", handlers.UpdateUserHandler)
+	mux.HandleFunc("GET /health", handlers.HealthCheckHandler)
+	mux.HandleFunc("GET /users", handlers.GetUsersHandler)
+	mux.HandleFunc("GET /users/{id}", handlers.GetUserHandler)
+	mux.HandleFunc("POST /users", handlers.CreateUserHandler)
+	mux.HandleFunc("DELETE /users/{id}", handlers.DeleteUserHandler)
+	mux.HandleFunc("PATCH /users/{id}", handlers.UpdateUserHandler)
 
 	log.Printf("Listening on %s", port)
 	log.Fatal(http.ListenAndServe(port, mux))

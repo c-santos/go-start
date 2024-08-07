@@ -12,11 +12,6 @@ type CreateUserDto struct {
 }
 
 func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	users, err := db.GetUsers()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -27,11 +22,6 @@ func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	user_id := r.PathValue("id")
 
 	user, err := db.GetUser(user_id)
@@ -44,12 +34,6 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusBadRequest)
-		return
-	}
-
 	var user models.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -68,14 +52,9 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		http.Error(w, "Method not allowed", http.StatusBadRequest)
-		return
-	}
-
 	user_id := r.PathValue("id")
 
-    user, err := db.GetUser(user_id)
+	user, err := db.GetUser(user_id)
 
 	err = db.DeleteUser(user_id)
 	if err != nil {
@@ -87,21 +66,15 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPatch {
-        http.Error(w, "Method not allowed", http.StatusBadRequest)
-        return
-    }
+	user_id := r.PathValue("id")
 
-    user_id := r.PathValue("id")
+	var updatedUser models.User
+	json.NewDecoder(r.Body).Decode(&updatedUser)
 
-    var updatedUser models.User
-    json.NewDecoder(r.Body).Decode(&updatedUser)
+	user, err := db.UpdateUser(user_id, updatedUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
 
-    user, err := db.UpdateUser(user_id, updatedUser)
-    if err != nil {
-        http.Error(w, err.Error(), 500)
-    }
-
-    Respond(w, user, 200)
+	Respond(w, user, 200)
 }
-
