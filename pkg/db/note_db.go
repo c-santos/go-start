@@ -56,7 +56,7 @@ func GetNotes() (models.Notes, error) {
 }
 
 func GetNote(note_id string) (models.Note, error) {
-	row := DB.QueryRow("SELECT * from note where id = ?", note_id)
+	row := DB.QueryRow("SELECT * from note WHERE id = ?", note_id)
 	if row.Err() != nil {
 		return models.Note{}, errors.New("Query unsuccessful.")
 	}
@@ -104,4 +104,55 @@ func GetNotesByUserId(user_id int) (models.Notes, error) {
 	}
 
 	return notes, nil
+}
+
+func UpdateNote(note_id string, user_id string, note models.Note) (models.Note, error) {
+	var query string
+	var args []interface{}
+	log.Println(note)
+
+	if note.Body == "" && note.Title == "" {
+		return models.Note{}, errors.New("Nothing to update.")
+	}
+
+	if note.Title != "" {
+		query = "UPDATE note SET title = ?"
+		args = append(args, note.Title)
+	}
+
+	if note.Body != "" {
+		if query != "" {
+			query += ", body = ?"
+		} else {
+			query = "UPDATE note SET body = ?"
+		}
+		args = append(args, note.Body)
+	}
+
+	query += " WHERE id = ? and user_id = ?"
+	args = append(args, note_id, user_id)
+
+	log.Println(query)
+
+	stmt, err := DB.Prepare(query)
+	if err != nil {
+		return models.Note{}, err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(args...)
+	if err != nil {
+		return models.Note{}, err
+	}
+
+	rows := DB.QueryRow("SELECT * from note WHERE id = ?", note_id)
+
+	var updated_note models.Note
+	err = rows.Scan(&updated_note.ID, &updated_note.Title, &updated_note.Body, &updated_note.UserID)
+	if err != nil {
+		return models.Note{}, err
+	}
+
+	return updated_note, nil
 }
