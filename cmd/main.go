@@ -21,6 +21,9 @@ func main() {
 	mux.HandleFunc("DELETE /users/{id}", handlers.DeleteUserHandler)
 	mux.HandleFunc("PATCH /users/{id}", handlers.UpdateUserHandler)
 
+	mux.HandleFunc("GET /notes", handlers.GetNotesHandler)
+	mux.HandleFunc("POST /notes", handlers.CreateNoteHandler)
+
 	log.Printf("Listening on %s", port)
 	log.Fatal(http.ListenAndServe(port, mux))
 }
