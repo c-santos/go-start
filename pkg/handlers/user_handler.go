@@ -125,3 +125,23 @@ func GetUserNotesHandler(w http.ResponseWriter, r *http.Request) {
 
 	Respond(w, notes, 200)
 }
+
+func DeleteUserNoteHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract user_id from path params.
+	user_id := r.PathValue("user_id")
+	note_id := r.PathValue("note_id")
+
+	note, err := db.GetNote(note_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = db.DeleteNote(user_id, note_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	Respond(w, note, 200)
+}
