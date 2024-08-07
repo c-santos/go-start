@@ -5,6 +5,7 @@ import (
 	"go-start/pkg/db"
 	"go-start/pkg/models"
 	"net/http"
+	"strconv"
 )
 
 type CreateUserDto struct {
@@ -77,4 +78,50 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Respond(w, user, 200)
+}
+
+func CreateUserNoteHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract user_id from path params.
+	user_id := r.PathValue("user_id")
+	int_user_id, err := strconv.Atoi(user_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Decode response body to note variable.
+	var note models.Note
+	err = json.NewDecoder(r.Body).Decode(&note)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Assign user_id.
+	*&note.UserID = int_user_id
+
+	created_note, err := db.CreateNote(note)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+
+	Respond(w, created_note, 201)
+}
+
+func GetUserNotesHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract user_id from path params.
+	user_id := r.PathValue("user_id")
+	int_user_id, err := strconv.Atoi(user_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	notes, err := db.GetNotesByUserId(int_user_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	Respond(w, notes, 200)
 }
