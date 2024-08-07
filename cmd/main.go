@@ -21,6 +21,8 @@ func main() {
 	mux.HandleFunc("DELETE /users/{id}", handlers.DeleteUserHandler)
 	mux.HandleFunc("PATCH /users/{id}", handlers.UpdateUserHandler)
 
+    mux.HandleFunc("POST /users/{user_id}/notes", handlers.CreateUserNoteHandler)
+
 	mux.HandleFunc("GET /notes", handlers.GetNotesHandler)
 	mux.HandleFunc("POST /notes", handlers.CreateNoteHandler)
 
