@@ -55,6 +55,38 @@ func GetNotes() (models.Notes, error) {
 	return notes, nil
 }
 
+func GetNote(note_id string) (models.Note, error) {
+	row := DB.QueryRow("SELECT * from note where id = ?", note_id)
+	if row.Err() != nil {
+		return models.Note{}, errors.New("Query unsuccessful.")
+	}
+
+	var note models.Note
+
+	err := row.Scan(&note.ID, &note.Title, &note.Body, &note.UserID)
+	if err != nil {
+		return models.Note{}, errors.New("Row scan failed.")
+	}
+
+	return note, nil
+}
+
+func DeleteNote(user_id string, note_id string) error {
+	stmt, err := DB.Prepare("DELETE FROM note WHERE id = ? AND user_id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user_id, note_id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetNotesByUserId(user_id int) (models.Notes, error) {
 	rows, err := DB.Query("SELECT * from note WHERE user_id = ?", user_id)
 	if err != nil {
