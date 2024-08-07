@@ -6,8 +6,6 @@ import (
 	"log"
 )
 
-
-
 func CreateUser(user models.User) (models.User, error) {
 	stmt, err := DB.Prepare("INSERT INTO user(name) VALUES(?)")
 	if err != nil {
