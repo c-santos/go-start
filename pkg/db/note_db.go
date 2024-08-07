@@ -54,3 +54,22 @@ func GetNotes() (models.Notes, error) {
 
 	return notes, nil
 }
+
+func GetNotesByUserId(user_id int) (models.Notes, error) {
+	rows, err := DB.Query("SELECT * from note WHERE user_id = ?", user_id)
+	if err != nil {
+		return nil, errors.New("Query error.")
+	}
+
+	var notes models.Notes
+	for rows.Next() {
+		var note models.Note
+		err = rows.Scan(&note.ID, &note.Title, &note.Body, &note.UserID)
+		if err != nil {
+			log.Printf("[db.GetNotes] %s", err)
+		}
+		notes = append(notes, note)
+	}
+
+	return notes, nil
+}

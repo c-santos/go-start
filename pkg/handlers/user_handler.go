@@ -107,3 +107,21 @@ func CreateUserNoteHandler(w http.ResponseWriter, r *http.Request) {
 
 	Respond(w, created_note, 201)
 }
+
+func GetUserNotesHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract user_id from path params.
+	user_id := r.PathValue("user_id")
+	int_user_id, err := strconv.Atoi(user_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	notes, err := db.GetNotesByUserId(int_user_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	Respond(w, notes, 200)
+}
