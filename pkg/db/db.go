@@ -2,8 +2,8 @@ package db
 
 import (
 	"database/sql"
-	"log"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 var DB *sql.DB
@@ -26,9 +26,9 @@ func createTables() {
     );
     CREATE TABLE IF NOT EXISTS note (
         id INTEGER NOT NULL PRIMARY KEY,
-        user_id INTEGER NOT NULL,
         title TEXT,
         body TEXT,
+        user_id INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES user(id)
     );
 `
@@ -41,4 +41,3 @@ func createTables() {
 		log.Println("Database created successfully.")
 	}
 }
-
