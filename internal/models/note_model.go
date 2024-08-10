@@ -6,3 +6,5 @@ type Note struct {
 	Body   string `json:"body"`
 	UserID int `json:"user_id"`
 }
+
+type Notes = []Note
