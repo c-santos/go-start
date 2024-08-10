@@ -6,6 +6,16 @@ import (
 	"log"
 )
 
+func InitUser() (string) {
+	stmt := `
+    CREATE TABLE IF NOT EXISTS user (
+        id INTEGER NOT NULL PRIMARY KEY,
+        name TEXT
+    );`
+
+    return stmt
+}
+
 func CreateUser(user models.User) (models.User, error) {
 	stmt, err := DB.Prepare("INSERT INTO user(name) VALUES(?)")
 	if err != nil {
