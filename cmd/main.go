@@ -2,7 +2,7 @@ package main
 
 import (
 	"go-start/internal/database"
-	"go-start/pkg/handlers"
+	"go-start/internal/handlers"
 	"log"
 	"net/http"
 )
