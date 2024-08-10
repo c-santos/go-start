@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"go-start/pkg/db"
-	"go-start/pkg/models"
+    "go-start/internal/db"
+	"go-start/internal/models"
 	"net/http"
 )
 

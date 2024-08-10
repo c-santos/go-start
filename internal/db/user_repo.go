@@ -1,8 +1,8 @@
-package database
+package db
 
 import (
 	"errors"
-	"go-start/pkg/models"
+	"go-start/internal/models"
 	"log"
 )
 
