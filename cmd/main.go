@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-start/pkg/db"
+	"go-start/internal/database"
 	"go-start/pkg/handlers"
 	"log"
 	"net/http"
@@ -10,7 +10,7 @@ import (
 func main() {
 	port := ":8000"
 
-	db.InitDB()
+	database.InitDB()
 
 	mux := &http.ServeMux{}
 
