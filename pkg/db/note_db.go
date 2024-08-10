@@ -6,6 +6,19 @@ import (
 	"log"
 )
 
+func InitNote() string {
+	stmt := `
+    CREATE TABLE IF NOT EXISTS note (
+        id INTEGER NOT NULL PRIMARY KEY,
+        title TEXT,
+        body TEXT,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY(user_id) REFERENCES user(id)
+    );`
+
+	return stmt
+}
+
 func CreateNote(note models.Note) (models.Note, error) {
 	stmt, err := DB.Prepare("INSERT INTO note(title, body, user_id) VALUES(?, ?, ?)")
 	if err != nil {

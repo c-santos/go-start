@@ -19,23 +19,12 @@ func InitDB() {
 }
 
 func createTables() {
-	sqlStmt := `
-    CREATE TABLE IF NOT EXISTS user (
-        id INTEGER NOT NULL PRIMARY KEY,
-        name TEXT
-    );
-    CREATE TABLE IF NOT EXISTS note (
-        id INTEGER NOT NULL PRIMARY KEY,
-        title TEXT,
-        body TEXT,
-        user_id INTEGER NOT NULL,
-        FOREIGN KEY(user_id) REFERENCES user(id)
-    );
-`
-	_, err := DB.Exec(sqlStmt)
+    table_init_stmt := InitUser() + InitNote()
+
+	_, err := DB.Exec(table_init_stmt)
 
 	if err != nil {
-		log.Fatalf("%qL %s\n", err, sqlStmt)
+		log.Fatalf("%qL %s\n", err, table_init_stmt)
 		return
 	} else {
 		log.Println("Database created successfully.")
