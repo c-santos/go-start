@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"go-start/internal/database"
+	"go-start/internal/db"
 	"go-start/internal/models"
 	"net/http"
 	"strconv"
@@ -13,7 +13,7 @@ type CreateUserDto struct {
 }
 
 func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	users, err := database.GetUsers()
+	users, err := db.GetUsers()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -25,7 +25,7 @@ func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	user_id := r.PathValue("id")
 
-	user, err := database.GetUser(user_id)
+	user, err := db.GetUser(user_id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -43,7 +43,7 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err = database.CreateUser(user)
+	user, err = db.CreateUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
