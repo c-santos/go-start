@@ -32,8 +32,7 @@ func CreateNote(note models.Note) (models.Note, error) {
 		return models.Note{}, err
 	}
 
-	var note_id int64
-	note_id, err = result.LastInsertId()
+	note_id, err := result.LastInsertId()
 	if err != nil {
 		return models.Note{}, err
 	}

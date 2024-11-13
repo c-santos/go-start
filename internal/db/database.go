@@ -19,7 +19,7 @@ func InitDB() {
 }
 
 func createTables() {
-    table_init_stmt := InitUser() + InitNote()
+	table_init_stmt := InitUser() + InitNote() + InitMigrations()
 
 	_, err := DB.Exec(table_init_stmt)
 
@@ -29,4 +29,6 @@ func createTables() {
 	} else {
 		log.Println("Database created successfully.")
 	}
+
+	Migrate()
 }
