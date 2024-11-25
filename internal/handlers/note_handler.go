@@ -2,11 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-    "go-start/internal/db"
+	"go-start/internal/db"
 	"go-start/internal/models"
 	"net/http"
 )
-
 
 func GetNotesHandler(w http.ResponseWriter, r *http.Request) {
 	notes, err := db.GetNotes()
