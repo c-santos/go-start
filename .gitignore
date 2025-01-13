@@ -1,3 +1,4 @@
 cmd/test.db
 cmd/tmp
 tmp/
+.env
